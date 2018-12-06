@@ -13,50 +13,11 @@ This library is used by the [Keyshape](https://www.keyshapeapp.com) animation so
 The [Keyshape app support page](https://www.keyshapeapp.com/support) has tutorials
 showing how to control animations exported from Keyshape.
 
-The exported SVG files assign KeyshapeJS to ks, so that it is possible to use ks
-instead of KeyshapeJS, like this:
+The the timeline can be controlled like this:
 
-    ks.animate("#elem", [{ property: "opacity", times: [0, 1000], values: [0, 1] }]);
-
-## Standalone Usage
-
-It is possible to use the library as a standalone animation engine.
-
-Download the library and include the KeyshapeJS JavaScript library in the SVG file.
-
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ...>
-        <script xlink:href="keyshapejs.js"/>
-        ...
-
-Here's an example animating the opacity property of an element with the id "elem".
-
-    <rect id="elem" width="100" height="100"/>
-    <script>
-        var tl = KeyshapeJS.animate("#elem", [{ property: "opacity", times: [0, 1000], values: [0, 1] }]);
-    </script>
-
-The animate() method returns a timeline object, which can be paused and
-its time can be set. All time values are in milliseconds.
-
-    tl.pause();      // pauses the animation
-    tl.time(2000);   // set the time to 2.0 seconds
-    tl.play();       // plays the animation
-
-The animate() method can animate multiple elements with different keyframes.
-This animates two elements:
-
-    KeyshapeJS.animate(
-        "#elem1", [{ property: "opacity", times: [0, 1000], values: [0, 1] }],
-        "#elem2", [{ property: "strokeWidth", times: [1000, 1500], values: [1, 10] }],
-    );
-
-Multiple properties can be animated. This animates stroke and stroke width of one element:
-
-    KeyshapeJS.animate("#elem1",
-        [{ property: "stroke", times: [500, 1200], values: [ "#000000", "#808080" ] },
-         { property: "strokeWidth", times: [600, 1300], values: [1, 10] }]);
-
-The above can be combined to animate many properties in multiple elements.
+    KeyshapeJS.globalPlay();                // global play
+    KeyshapeJS.globalPause();               // global pause
+    KeyshapeJS.timelines()[0].time(1000);   // set the current time to 1000 millisecs
 
 ## Times and values
 
@@ -518,7 +479,7 @@ the timeline at the end of the range, call `tl.pause(tl.range().out)` in the cal
     var tl = KeyshapeJS.animate(pathElem, [{
         property: "strokeDashoffset", times: [0, 1000], values: [len, 0] }]);
 
-## Create a shape animation
+### Create a shape animation
 
 There must be the same amount of path commands and the commands must be the same, otherwise
 a discrete animation is shown.
@@ -527,6 +488,46 @@ a discrete animation is shown.
         "path('M0,0C0,0,20,-20,20,-20C20,-20,40,0,40,0C40,0,20,20,20,20C20,20,0,0,0,0Z')",
         "path('M0,0C12,0,20,-8,20,-20C20,-8,28,0,40,0C28,0,20,8,20,20C20,8,12,0,0,0Z')"]
     }]);
+
+## Standalone Usage
+
+It is possible to use the library as a standalone animation engine.
+
+Download the library and include the KeyshapeJS JavaScript library in the SVG file.
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ...>
+        <script xlink:href="keyshapejs.js"/>
+        ...
+
+Here's an example animating the opacity property of an element with the id "elem".
+
+    <rect id="elem" width="100" height="100"/>
+    <script>
+        var tl = KeyshapeJS.animate("#elem", [{ property: "opacity", times: [0, 1000], values: [0, 1] }]);
+    </script>
+
+The animate() method returns a timeline object, which can be paused and
+its time can be set. All time values are in milliseconds.
+
+    tl.pause();      // pauses the animation
+    tl.time(2000);   // set the time to 2.0 seconds
+    tl.play();       // plays the animation
+
+The animate() method can animate multiple elements with different keyframes.
+This animates two elements:
+
+    KeyshapeJS.animate(
+        "#elem1", [{ property: "opacity", times: [0, 1000], values: [0, 1] }],
+        "#elem2", [{ property: "strokeWidth", times: [1000, 1500], values: [1, 10] }],
+    );
+
+Multiple properties can be animated. This animates stroke and stroke width of one element:
+
+    KeyshapeJS.animate("#elem1",
+        [{ property: "stroke", times: [500, 1200], values: [ "#000000", "#808080" ] },
+         { property: "strokeWidth", times: [600, 1300], values: [1, 10] }]);
+
+The above can be combined to animate many properties in multiple elements.
 
 ## Browser restrictions
 
