@@ -188,6 +188,8 @@ will keep the timeline in its "idle" state. The default is autoplay: true.
 The autoremove option causes the timeline to be automatically removed from the timeline list
 when it is finished. The default is autoremove: true.
 
+Note: the autoremove: true feature may change in the future, so using it should be avoided.
+
 ## Short key names
 
 To make the animation data more compact, the keys given to the animate() method can be replaced
@@ -279,6 +281,8 @@ Returns: The KeyshapeJS object is returned for method chaining.
 Removes an timeline object from the timeline list. If the timeline object is not in
 the timeline list, then this method does nothing.
 
+Note: the remove() method may change in the future, so using it should be avoided.
+
     var tls = KeyshapeJS.timelines();
     KeyshapeJS.remove(tls[0]);        // removes the first timeline object
     KeyshapeJS.add(tls[0]);           // adds the removed object back to the end of the list
@@ -290,6 +294,8 @@ Returns: The KeyshapeJS object is returned for method chaining.
 Removes all timeline objects from the timeline list.
 
     KeyshapeJS.removeAll();     // removes all timeline objects
+
+Note: the removeAll() method may change in the future, so using it should be avoided.
 
 ### KeyshapeJS.version
 
