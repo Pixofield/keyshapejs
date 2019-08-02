@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.0.0 (c) 2018 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.0.1 (c) 2018 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 window['KeyshapeJS'] = (function () {
 
 function ERR(msg) { return Error(msg); }
@@ -656,7 +656,7 @@ function parseTransform(elem)
     if (startsWith(first, "scale(")) {
         vals = parseCommaSeparated(first.substring(6));
         trans[P_SCALEX] = vals[0];
-        trans[P_SCALEY] = isSet(vals[1]) ? vals[1] : 0;
+        trans[P_SCALEY] = isSet(vals[1]) ? vals[1] : vals[0];
         first = parts.shift();
     }
     if (startsWith(first, "translate(")) {
@@ -1530,7 +1530,7 @@ function globalState()
 }
 
 return {
-    'version': '1.0.0',
+    'version': '1.0.1',
     'animate': animate,
     'add': add,
     'remove': remove,
