@@ -309,7 +309,7 @@ function convertToSvgValue(type, val)
 {
     // non-numeric colors are returned as such
     if (type == FLAG_TYPE_COLOR && typeof val === 'number') {
-        return "#"+("000000"+val.toString(16)).substr(-6);
+        return "rgba("+(val>>>24)+","+((val>>>16)&255)+","+((val>>>8)&255)+","+((val&255)/255)+")";
 
     } else if (type == FLAG_TYPE_LENGTH_LIST) {
         val = val.map(function(v) { return v+"px"; });
@@ -376,12 +376,13 @@ function interpolate(type, v1, v2, t)
     }
     if (type == FLAG_TYPE_COLOR) {
         if (typeof v1 === 'number' && typeof v2 === 'number') {
-            // interpolate rgb colors
+            // interpolate rgba colors
             var nt = 1-t;
-            var r = nt*(v1>>16) + t*(v2>>16);
-            var g = nt*((v1>>8)&255) + t*((v2>>8)&255);
-            var b = nt*(v1&255) + t*(v2&255);
-            return clampColor(r)<<16 | clampColor(g)<<8 | clampColor(b);
+            var r = nt*(v1>>>24) + t*(v2>>>24);
+            var g = nt*((v1>>>16)&255) + t*((v2>>>16)&255);
+            var b = nt*((v1>>>8)&255) + t*((v2>>>8)&255);
+            var a = nt*(v1&255) + t*(v2&255);
+            return (clampColor(r)<<24 | clampColor(g)<<16 | clampColor(b)<<8 | clampColor(a)) >>> 0;
         }
         // gradients are like strings
         return t < 0.5 ? v1 : v2;
@@ -1350,7 +1351,11 @@ function parseValues(prop, values)
 
         } else if (type == FLAG_TYPE_COLOR) {
             if (startsWith(values[i], "#")) {
+                var hasAlpha = (values[i].length == 9);
                 values[i] = parseInt(values[i].substring(1), 16);
+                if (!hasAlpha) { // add alpha to colors without it
+                    values[i] = (values[i]*256) | 255;
+                }
             } else if (!startsWith(values[i], "url(") && values[i] != "none") {
                 console.warn("unsupported color: "+values[i]);
                 values[i] = 0;
