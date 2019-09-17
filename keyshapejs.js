@@ -973,10 +973,22 @@ KsAnimation.prototype = {
         }
     },
 
+    _parseTime(value)
+    {
+        if (typeof value == 'number') {
+            return value;
+        }
+        if (!isSet(this._options['markers']) || !isSet(this._options['markers'][value])) {
+            throw ERR("Invalid marker: "+value);
+        }
+        return +(this._options['markers'][value]);
+    },
+
     // starts playing the timeline
     'play': function(millisecs)
     {
         if (isSet(millisecs) && millisecs !== null) {
+            millisecs = this._parseTime(millisecs);
             checkIsFinite(millisecs);
             // don't allow before or after range, because that would go directly to finished state
             if (this._playRate < 0 && millisecs < this._rangeIn) { millisecs = this._rangeIn; }
@@ -1016,6 +1028,7 @@ KsAnimation.prototype = {
             throw NOT_IN_LIST_EXCEPTION;
         }
         if (isSet(millisecs)) {
+            millisecs = this._parseTime(millisecs);
             checkIsFinite(millisecs);
         }
         if (this._getState() != STATE_PAUSED) {
@@ -1051,10 +1064,10 @@ KsAnimation.prototype = {
         if (arguments.length == 0) {
             return { "in": this._rangeIn, "out": this._rangeOut };
         }
-        var pin = +inTime;
+        var pin = this._parseTime(inTime);
         var pout = this._endTime;
         if (isSet(outTime)) {
-            pout = +outTime;
+            pout = this._parseTime(outTime);
         }
         checkIsFinite(pin);
         if (pin < 0 || pout < 0 || pin >= pout || isNaN(pout)) {
@@ -1128,6 +1141,7 @@ KsAnimation.prototype = {
             if (!this._addedToList) {
                 throw NOT_IN_LIST_EXCEPTION;
             }
+            millisecs = this._parseTime(millisecs);
             checkIsFinite(millisecs);
             this._setCurrentTime(millisecs, true);
             return this;
@@ -1192,6 +1206,10 @@ KsAnimation.prototype = {
             return this;
         }
         return this._getRate();
+    },
+
+    'marker': function(name) {
+        return isSet(this._options['markers']) ? this._options['markers'][name] : undefined;
     },
 
     '_cancel': function() {

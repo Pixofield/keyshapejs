@@ -173,14 +173,14 @@ any JavaScript variable, they will be freed by the JavaScript garbage collector.
     KeyshapeJS.remove(list[0]);                   // removes the first timeline object from the list
     KeyshapeJS.removeAll();                       // removes all timeline objects
 
-## Options: autoplay and autoremove
+## Options: autoplay, autoremove and markers
 
 The animate() method takes in options for autoplay and autoremove. They are given as the last
 parameter for the animate() method:
 
     KeyshapeJS.animate("#elem",
                  [{ property: "opacity", times: [0, 1000], values: [0, 1] }],
-                 { autoplay: false, autoremove: false });
+                 { autoplay: false, autoremove: false, markers: { "m1", 500 } });
 
 The autoplay option can be used to make the timeline play immediately. Setting it to false
 will keep the timeline in its "idle" state. The default is autoplay: true.
@@ -189,6 +189,9 @@ The autoremove option causes the timeline to be automatically removed from the t
 when it is finished. The default is autoremove: true.
 
 Note: the autoremove: true feature may change in the future, so using it should be avoided.
+
+Markers are predefined time values, which can be used as times in play(), pause(), range() and
+time().
 
 ## Short key names
 
@@ -224,6 +227,7 @@ The options parameter is an object with the following values:
    The onfinish callback is called before the removal and if the callback changes the state to something
    else than "finished", then the removal does not happen. That way the onfinish callback
    has a chance to react before the removal happens.
+ * markers: markers for the timeline
 
 Examples:
 
@@ -239,7 +243,7 @@ Examples:
     // animate with options
     KeyshapeJS.animate(document.getElementById("myId"),
                [ { property: "posY", times: [ 1000, 2500 ], values: [ 50, 120 ] } ],
-               { autoplay: false, autoremove: false });
+               { autoplay: false, autoremove: false, markers: { "m1", 500 } });
 
 ### KeyshapeJS.globalPlay()
 
@@ -305,12 +309,14 @@ A string property containing the current library version number.
 
 ## Timeline object methods
 
-### timeline.play(millisecs)
+### timeline.play(millisecs|marker)
 
 Returns: The timeline object is returned for method chaining.
 
 Starts playing the timeline from the current time or the given millisecs time, if the parameter
 is given and it is not null. The state of the timeline is changed to "running".
+
+It is possible to pass in a marker name to play from the marker's time.
 
 Throws an exception if the timeline has not been added to the timeline list.
 
@@ -319,20 +325,24 @@ but the timeline does not progress.
 
     tl.play();                  // starts playing the timeline
     tl.play(1800);              // starts playing the timeline at 1.8 seconds
+    tl.play("my-marker");       // starts playing the timeline from the marker time
 
-### timeline.pause(millisecs)
+### timeline.pause(millisecs|marker)
 
 Returns: The timeline object is returned for method chaining.
 
 Pauses the timeline. If the millisecs parameter is given, then the current time is set to it.
 The state of the timeline is changed to "paused".
 
+It is possible to pass in a marker name to use its time.
+
 Throws an exception if the timeline has not been added to the timeline list.
 
     tl.pause();             // pauses the timeline at the current time
     tl.pause(1800);         // pauses the timeline and sets the time to 1.8 seconds
+    tl.pause("my-marker");  // pauses the timeline and sets the time to the marker's time
 
-### timeline.time(millisecs)
+### timeline.time(millisecs|marker)
 
 Gets or sets the current time.
 
@@ -345,8 +355,11 @@ the timeline list or its state is "idle", then null is returned.
 
 If the parameter is given, then the current time is set to it.
 
+It is possible to pass in a marker name to use its time.
+
     var millisecs = tl.time();    // gets the current time of the 'tl' timeline object
     tl.time(2300);                // sets the current time to 2.3 seconds
+    tl.time("my-marker");         // sets the current time to the marker's time
 
 ### timeline.state()
 
@@ -403,6 +416,8 @@ used as the outTime.
 The in and out times must not be negative and the out time must be greater than the in time,
 otherwise an exception is thrown.
 
+It is possible to pass in marker names as inTime and outTime.
+
 The play range is used to detect when a timeline is finished or looped. The play range affects
 the timeline only if the timeline is "running". If the timeline's time
 becomes greater than the range out time, then the timeline is either finished or looped.
@@ -418,6 +433,7 @@ Examples:
     var r = tl.range();                 // returns the current play range
     tl.range(100, 1200);                // sets the play range to be between 0.1 and 1.2 secs
     tl.range(100);                      // sets the play range to [100, duration()]
+    tl.range("mark1", "mark2");         // the play range uses the times defined by the markers
 
 ### timeline.loop(loopCount)
 
@@ -441,6 +457,16 @@ Examples:
     tl.loop(Infinity);      // loops forever
     tl.loop(5);             // jumps 5 times
     var lc = tl.loop();     // returns { count: 5 }
+
+### timeline.marker(name)
+
+Returns: The time for the given marker name or undefined if the marker is not found.
+
+Gets the given marker's time in milliseconds.
+
+Example:
+
+    var timems = tl.marker("my-marker");          // gets the time for "my-marker"
 
 ### Callback: onfinish
 
