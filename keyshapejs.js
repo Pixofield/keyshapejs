@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.0.1 (c) 2018 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.0.1 (c) 2018-2019 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 window['KeyshapeJS'] = (function () {
 
 function ERR(msg) { return Error(msg); }

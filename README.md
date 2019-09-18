@@ -592,4 +592,4 @@ The MIT license. See the LICENSE file for the full license text.
 The minified JavaScript file has a single line license text which is sufficient
 when redistributing it.
 
-    /* KeyshapeJS v1.0.0 (c) 2018 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+    /* KeyshapeJS v1.0.0 (c) 2018-2019 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
