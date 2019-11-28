@@ -51,8 +51,8 @@ The following table lists supported properties and values they accept.
 | opacity           |  number             |
 | fillOpacity       |  number             |
 | strokeOpacity     |  number             |
-| fill              |  color: '#ff0000', 'url("#ref")', 'none'   |
-| stroke            |  color: '#ff0000', 'url("#ref")', 'none'   |
+| fill              |  color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'   |
+| stroke            |  color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'   |
 | strokeDasharray   |  number list: '10 20'   |
 | strokeDashoffset  |  number (gets converted to px)   |
 | strokeWidth       |  number (gets converted to px)   |
