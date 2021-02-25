@@ -458,6 +458,20 @@ Examples:
     tl.loop(5);             // jumps 5 times
     var lc = tl.loop();     // returns { count: 5 }
 
+### timeline.markers(markermap)
+
+Returns: All time markers for the timeline or the timeline object for method chaining.
+
+Gets or sets the markers for the timeline. If no parameter is given, then this returns
+an object containing all time markers for the timeline.
+
+If markermap is given, then its values replace markers in the timeline.
+
+Examples:
+
+    var m = tl.markers();   // returns an object containing markers, e.g. { "m1": 1000, "m2": 2000 }
+    tl.markers({ "newm1": 2000, "marker2": 5000 }); // sets new markers
+
 ### timeline.marker(name)
 
 Returns: The time for the given marker name or undefined if the marker is not found.

@@ -1209,6 +1209,14 @@ KsAnimation.prototype = {
         return this._getRate();
     },
 
+    'markers': function(markermap) {
+        if (isSet(markermap)) {
+            this._options['markers'] = copyMap(markermap);
+            return this;
+        }
+        return isSet(this._options['markers']) ? this._options['markers'] : {};
+    },
+
     'marker': function(name) {
         return isSet(this._options['markers']) ? this._options['markers'][name] : undefined;
     },
