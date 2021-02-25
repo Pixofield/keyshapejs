@@ -99,6 +99,8 @@ if (!reqAnimationFrame) { // IE9 needs setTimeout()
     };
 }
 
+var isWebkit = navigator.vendor.match(/apple/i);
+
 function isSet(value)
 {
     return typeof value !== "undefined";
@@ -939,6 +941,11 @@ KsAnimation.prototype = {
             // if transform was animated, then set it
             if (hasTransform) {
                 composeAndSetTransformAttr(target);
+            }
+            // Fix for Webkit to get elements under symbols animated:
+            // set attribute value to get symbols repainted
+            if (isWebkit) {
+                target.setAttribute("opacity", target.getAttribute("opacity"));
             }
         }
         // return flag indicating if this animation wants to keep ticking
