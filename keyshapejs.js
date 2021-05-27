@@ -70,6 +70,7 @@ var FLAG_TYPE_COLOR             = 0x30;
 var FLAG_TYPE_LENGTH_LIST       = 0x40;
 var FLAG_TYPE_FILTER            = 0x50;
 var FLAG_TYPE_PATH              = 0x60;
+var FLAG_TYPE_VISIBILITY        = 0x70;
 
 // Timing function values
 var TIMING_FN_LINEAR     = 0;
@@ -160,6 +161,7 @@ var propertyData = {
     "strokeOpacity": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_NUMBER,
     "strokeWidth": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_LENGTH,
     "transform": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_STRING,
+    "visibility": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_VISIBILITY,
     "width": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH
 };
 
@@ -375,6 +377,15 @@ function interpolate(type, v1, v2, t)
     }
     if (type == FLAG_TYPE_STRING) {
         return t < 0.5 ? v1 : v2;
+    }
+    if (type == FLAG_TYPE_VISIBILITY) {
+        if (t <= 0) {
+            return v1;
+        } else if (t >= 1) {
+            return v2;
+        } else {
+            return "visible";
+        }
     }
     if (type == FLAG_TYPE_COLOR) {
         if (typeof v1 === 'number' && typeof v2 === 'number') {

@@ -49,6 +49,7 @@ The following table lists supported properties and values they accept.
 | anchorX           |  number (gets converted to px)   |
 | anchorY           |  number (gets converted to px)   |
 | opacity           |  number             |
+| visibility        |  string: 'visible', 'hidden'     |
 | fillOpacity       |  number             |
 | strokeOpacity     |  number             |
 | fill              |  color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'   |
