@@ -13,7 +13,7 @@ This library is used by the [Keyshape](https://www.keyshapeapp.com) animation so
 The [Keyshape app support page](https://www.keyshapeapp.com/support) has tutorials
 showing how to control animations exported from Keyshape.
 
-The the timeline can be controlled like this:
+The timeline can be controlled like this:
 
     KeyshapeJS.globalPlay();                // global play
     KeyshapeJS.globalPause();               // global pause
