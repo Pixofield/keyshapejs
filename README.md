@@ -468,20 +468,36 @@ an object containing all time markers for the timeline.
 
 If markermap is given, then its values replace markers in the timeline.
 
-Examples:
+For Keyshape 1.11 and earlier versions, markers contain only time. For Keyshape 1.12 and
+later versions, markers contain time and duration.
+
+Examples for Keyshape 1.12 data:
+
+    var m = tl.markers();   // returns an object containing markers,
+                            // e.g. { "m1": {"time": 1000}, "m2": {"time":2000, "dur": 1000} }
+    tl.markers({ "newm1": {"time":2000}, "marker2": {"time":5000, "dur":1000}); // sets new markers
+
+Examples for Keyshape 1.11 data:
 
     var m = tl.markers();   // returns an object containing markers, e.g. { "m1": 1000, "m2": 2000 }
     tl.markers({ "newm1": 2000, "marker2": 5000 }); // sets new markers
 
 ### timeline.marker(name)
 
-Returns: The time for the given marker name or undefined if the marker is not found.
+Returns: Data for the given marker name or undefined if the marker is not found.
 
-Gets the given marker's time in milliseconds.
+Gets the given marker's data.
 
-Example:
+For Keyshape 1.11 and earlier versions, markers contain only time. For Keyshape 1.12 and
+later versions, markers contain time and duration.
 
-    var timems = tl.marker("my-marker");          // gets the time for "my-marker"
+Example for Keyshape 1.12 data:
+
+    var marker = tl.marker("my-marker");      // gets "my-marker" data: {"time":1000, "dur":5000}
+
+Example for Keyshape 1.11 data:
+
+    var timems = tl.marker("my-marker");      // gets the time for "my-marker" in millisecs
 
 ### Callback: onfinish
 

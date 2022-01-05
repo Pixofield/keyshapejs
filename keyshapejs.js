@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.1.1 (c) 2018-2021 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.2.0 (c) 2018-2021 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 window['KeyshapeJS'] = (function () {
 
 function ERR(msg) { return Error(msg); }
@@ -52,6 +52,7 @@ var INX_VALUES          = 5;
 var INX_EASING          = 6;
 var INX_ITERATIONS      = 7;
 var INX_MPATH           = 8;
+var INX_FILL            = 9;
 
 // INX_MPATH and elements with motion path have this data
 var MPATH_AUTOROTATE    = 0;
@@ -78,6 +79,10 @@ var TIMING_FN_CUBIC      = 1;
 var TIMING_FN_STEP_START = 2;
 var TIMING_FN_STEP_END   = 3;
 
+// fill values
+var FILL_BACKWARDS      = 1;
+var FILL_FORWARDS       = 2;
+
 // play states
 var STATE_IDLE = "idle";
 var STATE_PAUSED = "paused";
@@ -100,7 +105,7 @@ if (!reqAnimationFrame) { // IE9 needs setTimeout()
     };
 }
 
-var isWebkit = navigator.vendor.match(/apple/i);
+var isWebkit = /apple/i.test(navigator.vendor);
 
 function isSet(value)
 {
@@ -556,7 +561,7 @@ function updateAllAnimations(mainUpdate)
             var tl = item[0];
             if (item[1] == PENDING_ONFINISH) {
                 if (tl['onfinish']) {
-                    // calling as a method sets 'this' to tl
+                    // calling as a method sets the timeline object as 'this'
                     tl['onfinish']();
                     // keep hasActiveTimelines for one more requestAnimationFrame so that
                     // play() etc. in onfinish callback keeps the timeline running
@@ -566,7 +571,7 @@ function updateAllAnimations(mainUpdate)
 
             } else if (item[1] == PENDING_ONLOOP) {
                 if (tl['onloop']) {
-                    // calling as a method sets 'this' to tl
+                    // calling as a method sets the timeline object as 'this'
                     tl['onloop']();
                 }
             }
@@ -871,8 +876,8 @@ KsAnimation.prototype = {
 
             // running animation, so check finished state (can't check getState() because
             // it may return finished for animation which doesn't have onfinish called)
-            // the callbacks will be called later so that them calling remove() works
             if (this._holdTime === null && this._startTimeVal !== null) {
+                // the callbacks will be called later so they can call remove() successfully
                 var pendingcb = this._updateFinishedState(false);
                 if (pendingcb != PENDING_NONE) {
                     pendingCallbacks.push([ this, pendingcb ]);
@@ -885,7 +890,6 @@ KsAnimation.prototype = {
         if (curTime === null) {
             return false;
         }
-
         var targets = this._targets;
         var adata = this._data;
         for (var e = 0; e < targets.length; ++e) {
@@ -908,19 +912,27 @@ KsAnimation.prototype = {
                 if (dur == 0) { // zero duration
                     val = pdata[INX_VALUES][tlen-1];
 
-                } else if (curTime <= starttime) { // before begin time
-                    val = pdata[INX_VALUES][0];
+                } else if (curTime < starttime) { // before begin time
+                    if (!pdata[INX_FILL] || pdata[INX_FILL][0] & FILL_BACKWARDS) {
+                        val = pdata[INX_VALUES][0];
+                    } else { // no fill backwards, so use fallback value
+                        val = pdata[INX_FILL][1];
+                    }
 
                 // after iteration has ended
                 } else if (curTime >= starttime + pdata[INX_ITERATIONDUR]) {
-                    if ((pdata[INX_ITERATIONDUR] % dur) == 0) {
-                        // use optimized path, if the end time is a multiple of last keyframe time,
-                        // this means that iteration stopped exactly at last keyframe
-                        val = pdata[INX_VALUES][tlen-1];
-                    } else {
-                        // calculate iteration end value, needs to interpolate because it is not at
-                        // a keyframe
-                        val = animateProperty(pdata[INX_ITERATIONDUR] % dur, pdata);
+                    if (!pdata[INX_FILL] || pdata[INX_FILL][0] & FILL_FORWARDS) {
+                        if ((pdata[INX_ITERATIONDUR] % dur) == 0) {
+                            // use optimized path, if the end time is a multiple of last keyframe time,
+                            // this means that iteration stopped exactly at last keyframe
+                            val = pdata[INX_VALUES][tlen-1];
+                        } else {
+                            // calculate iteration end value, needs to interpolate because it is not at
+                            // a keyframe
+                            val = animateProperty(pdata[INX_ITERATIONDUR] % dur, pdata);
+                        }
+                    } else { // no fill forwards, so use fallback value
+                        val = pdata[INX_FILL][1];
                     }
 
                 } else { // during active time
@@ -995,19 +1007,25 @@ KsAnimation.prototype = {
     _parseTime(value)
     {
         if (typeof value == 'number') {
-            return value;
+            return [ value, 0 ];
         }
         if (!isSet(this._options['markers']) || !isSet(this._options['markers'][value])) {
             throw ERR("Invalid marker: "+value);
         }
-        return +(this._options['markers'][value]);
+        var marker = this._options['markers'][value];
+        // marker contains "time" and "dur" (Keyshape 1.12+)
+        if (isSet(marker["time"])) {
+            return [ +(marker["time"]), +(marker["dur"] || 0) ];
+        }
+        // marker is assumed to contain a number (Keyshape 1.11)
+        return [ +marker, 0 ];
     },
 
     // starts playing the timeline
     'play': function(millisecs)
     {
         if (isSet(millisecs) && millisecs !== null) {
-            millisecs = this._parseTime(millisecs);
+            millisecs = this._parseTime(millisecs)[0];
             checkIsFinite(millisecs);
             // don't allow before or after range, because that would go directly to finished state
             if (this._playRate < 0 && millisecs < this._rangeIn) { millisecs = this._rangeIn; }
@@ -1018,9 +1036,9 @@ KsAnimation.prototype = {
             throw NOT_IN_LIST_EXCEPTION;
         }
         var t = this._getCurrentTime();
-        if (this._playRate > 0 && (t === null || t >= this._rangeOut)) {
+        if (this._playRate > 0 && (t === null || t >= this._rangeOut || t < this._rangeIn)) {
             this._holdTime = this._rangeIn;
-        } else if (this._playRate < 0 && (t === null || t <= this._rangeIn)) {
+        } else if (this._playRate < 0 && (t === null || t <= this._rangeIn || t > this._rangeOut)) {
             if (this._rangeOut == Infinity) {
                 throw ERR("Cannot seek to Infinity");
             }
@@ -1047,7 +1065,7 @@ KsAnimation.prototype = {
             throw NOT_IN_LIST_EXCEPTION;
         }
         if (isSet(millisecs)) {
-            millisecs = this._parseTime(millisecs);
+            millisecs = this._parseTime(millisecs)[0];
             checkIsFinite(millisecs);
         }
         if (this._getState() != STATE_PAUSED) {
@@ -1083,10 +1101,11 @@ KsAnimation.prototype = {
         if (arguments.length == 0) {
             return { "in": this._rangeIn, "out": this._rangeOut };
         }
-        var pin = this._parseTime(inTime);
+        var pintd = this._parseTime(inTime);
+        var pin = pintd[0];
         var pout = this._endTime;
         if (isSet(outTime)) {
-            pout = this._parseTime(outTime);
+            pout = this._parseTime(outTime)[0];
         }
         checkIsFinite(pin);
         if (pin < 0 || pout < 0 || pin >= pout || isNaN(pout)) {
@@ -1160,7 +1179,7 @@ KsAnimation.prototype = {
             if (!this._addedToList) {
                 throw NOT_IN_LIST_EXCEPTION;
             }
-            millisecs = this._parseTime(millisecs);
+            millisecs = this._parseTime(millisecs)[0];
             checkIsFinite(millisecs);
             this._setCurrentTime(millisecs, true);
             return this;
@@ -1493,6 +1512,10 @@ function initTimeline(tl, tlData)
                 // store total length for faster access
                 nprop[INX_MPATH][MPATH_PATHLENGTH] = mpathElement.getTotalLength();
             }
+            var fill = getShortOrLong(kf, "f", "fill");
+            if (isSet(fill)) {
+                nprop[INX_FILL] = copyArray(fill);
+            }
             newadata.push(nprop);
         }
         if (newadata.length > 0) {
@@ -1579,7 +1602,7 @@ function globalState()
 }
 
 return {
-    'version': '1.1.1',
+    'version': '1.2.0',
     'animate': animate,
     'add': add,
     'remove': remove,
