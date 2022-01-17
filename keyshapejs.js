@@ -28,15 +28,15 @@ var transformNames = [ "", "translate", "translate", "", "", "", "rotate",
 var FILTER_NONE                  = 0;
 var FILTER_URL                   = 1;
 var FILTER_BLUR                  = 2;
-var FILTER_BRIGHTNESS            = 3;
-var FILTER_CONTRAST              = 4;
+//UNUSED var FILTER_BRIGHTNESS            = 3;
+//UNUSED var FILTER_CONTRAST              = 4;
 var FILTER_DROPSHADOW            = 5;
-var FILTER_GRAYSCALE             = 6;
+//UNUSED var FILTER_GRAYSCALE             = 6;
 var FILTER_HUEROTATE             = 7;
-var FILTER_INVERT                = 8;
-var FILTER_OPACITY               = 9;
-var FILTER_SATURATE              = 10;
-var FILTER_SEPIA                 = 11;
+//UNUSED var FILTER_INVERT                = 8;
+//UNUSED var FILTER_OPACITY               = 9;
+//UNUSED var FILTER_SATURATE              = 10;
+//UNUSED var FILTER_SEPIA                 = 11;
 
 // Filter function names, the order matching the types
 var filterNames = [ "none", "url", "blur", "brightness", "contrast", "drop-shadow",
@@ -50,7 +50,7 @@ var INX_ITERATIONDUR    = 3; // begin+iteration dur = iteration end
 var INX_TIMES           = 4;
 var INX_VALUES          = 5;
 var INX_EASING          = 6;
-var INX_ITERATIONS      = 7;
+//UNUSED var INX_ITERATIONS      = 7;
 var INX_MPATH           = 8;
 var INX_FILL            = 9;
 
@@ -105,7 +105,7 @@ if (!reqAnimationFrame) { // IE9 needs setTimeout()
     };
 }
 
-var isWebkit = /apple/i.test(navigator.vendor);
+var isWebkit = navigator.vendor.match(/apple/i);
 
 function isSet(value)
 {
@@ -114,7 +114,7 @@ function isSet(value)
 
 function startsWith(str, s)
 {
-    return str && str.indexOf(s) == 0;
+    return str && str.indexOf(s) === 0;
 }
 
 function copyArray(arr)
@@ -173,7 +173,7 @@ var propertyData = {
 function isValidProperty(prop)
 {
     // is it a string without a dash
-    return typeof prop == "string" && prop.indexOf("-") == -1 && prop !== "" &&
+    return typeof prop === "string" && prop.indexOf("-") === -1 && prop !== "" &&
             (propertyData[prop] > 0 || transformProps.indexOf(prop) >= 0);
 }
 
@@ -195,8 +195,8 @@ function propertyFlags(prop)
         // check if it is a css property or an attribute
         if (isSet(allCssProps[prop])) {
             flags = FLAG_TARGET_CSS_PROPERTY;
-            flags |= (prop.toLowerCase().indexOf("color") == prop.length-5 ? FLAG_TYPE_COLOR
-                                                                           : FLAG_TYPE_STRING);
+            flags |= (prop.toLowerCase().indexOf("color") === prop.length-5 ? FLAG_TYPE_COLOR
+                                                                            : FLAG_TYPE_STRING);
         } else {
             flags = FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_STRING;
         }
@@ -212,7 +212,7 @@ function cubeRoot(a)
 // Solves quadratic equation ax^2 + bx + c = 0 and returns result between [0, 1]
 function solveRestrictedQuadraticEquation(a, b, c)
 {
-    if (a == 0) return -c/b;
+    if (a === 0) return -c/b;
 
     var sqrtDisc = Math.sqrt(b*b - 4.0*a*c);
     var x = (-b + sqrtDisc) / (2.0*a);
@@ -237,7 +237,7 @@ function solveRestrictedCubicEquation(a, b, c, d)
   // Based on cubic equation solver
   // theory: http://www.1728.org/cubic2.htm
 
-    if (a == 0) {
+    if (a === 0) {
         return solveRestrictedQuadraticEquation(b, c, d);
     }
     var f = c/a - ((b*b)/(a*a))/3.0;
@@ -246,7 +246,7 @@ function solveRestrictedCubicEquation(a, b, c, d)
     var p = -b/(3.0*a);
 
     if (h <= 0) { // 3 real roots
-        if (f == 0 && g == 0) {   // all roots equal
+        if (f === 0 && g === 0) {   // all roots equal
             // this code avoids possible divide by zero error when evaluating k below
             return -cubeRoot(d/a);  // x1, x2, x3, i = 0
 
@@ -317,14 +317,14 @@ function getCurrentTimeIndex(simpleTime, pdata)
 function convertToSvgValue(type, val)
 {
     // non-numeric colors are returned as such
-    if (type == FLAG_TYPE_COLOR && typeof val === 'number') {
+    if (type === FLAG_TYPE_COLOR && typeof val === 'number') {
         return "rgba("+(val>>>24)+","+((val>>>16)&255)+","+((val>>>8)&255)+","+((val&255)/255)+")";
 
-    } else if (type == FLAG_TYPE_LENGTH_LIST) {
+    } else if (type === FLAG_TYPE_LENGTH_LIST) {
         val = val.map(function(v) { return v+"px"; });
         return val.join(",");
 
-    } else if (type == FLAG_TYPE_PATH) {
+    } else if (type === FLAG_TYPE_PATH) {
         var path = "";
         var len = val.length;
         for (var ip = 0; ip < len; ip += 2) {
@@ -333,8 +333,8 @@ function convertToSvgValue(type, val)
         }
         return path;
 
-    } else if (type == FLAG_TYPE_FILTER) {
-        if (val[0] == FILTER_NONE) {
+    } else if (type === FLAG_TYPE_FILTER) {
+        if (val[0] === FILTER_NONE) {
             return "none";
         }
         var filters = "";
@@ -342,19 +342,19 @@ function convertToSvgValue(type, val)
         var i = 0;
         while (i < flen) {
             filters += filterNames[val[i]];
-            if (val[i] == FILTER_URL) {
+            if (val[i] === FILTER_URL) {
                 filters += "("+val[i+1]+") ";
-            } else if (val[i] == FILTER_DROPSHADOW) {
+            } else if (val[i] === FILTER_DROPSHADOW) {
                 var r = val[i+4] >>> 24; // triple >>> to get unsigned shift
                 var g = (val[i+4] >> 16) & 255;
                 var b = (val[i+4] >> 8) & 255;
                 var a = val[i+4] & 255;
                 filters += "("+val[i+1]+"px "+val[i+2]+"px "+val[i+3]+"px rgba("+
-                        r+","+g+","+b+","+(a/255)+")"+") ";
+                                r+","+g+","+b+","+(a/255)+")) ";
                 i += 3;
-            } else if (val[i] == FILTER_BLUR) {
+            } else if (val[i] === FILTER_BLUR) {
                 filters += "("+val[i+1]+"px) ";
-            } else if (val[i] == FILTER_HUEROTATE) {
+            } else if (val[i] === FILTER_HUEROTATE) {
                 filters += "("+val[i+1]+"deg) ";
             } else { // other filters
                 // clamp negative values, like all browsers seems to be doing for these values
@@ -363,7 +363,7 @@ function convertToSvgValue(type, val)
             i += 2;
         }
         return filters;
-    } else if (type == FLAG_TYPE_LENGTH) {
+    } else if (type === FLAG_TYPE_LENGTH) {
         return val+"px";
     }
     return val;
@@ -377,13 +377,13 @@ function clampColor(n)
 // interpolates between the given values v1 and v2 using t [0, 1]
 function interpolate(type, v1, v2, t)
 {
-    if (type == FLAG_TYPE_NUMBER || type == FLAG_TYPE_LENGTH) { // number or length
+    if (type === FLAG_TYPE_NUMBER || type === FLAG_TYPE_LENGTH) { // number or length
         return (v2-v1) * t + v1;
     }
-    if (type == FLAG_TYPE_STRING) {
+    if (type === FLAG_TYPE_STRING) {
         return t < 0.5 ? v1 : v2;
     }
-    if (type == FLAG_TYPE_VISIBILITY) {
+    if (type === FLAG_TYPE_VISIBILITY) {
         if (t <= 0) {
             return v1;
         } else if (t >= 1) {
@@ -392,7 +392,7 @@ function interpolate(type, v1, v2, t)
             return "visible";
         }
     }
-    if (type == FLAG_TYPE_COLOR) {
+    if (type === FLAG_TYPE_COLOR) {
         if (typeof v1 === 'number' && typeof v2 === 'number') {
             // interpolate rgba colors
             var nt = 1-t;
@@ -400,86 +400,86 @@ function interpolate(type, v1, v2, t)
             var g = nt*((v1>>>16)&255) + t*((v2>>>16)&255);
             var b = nt*((v1>>>8)&255) + t*((v2>>>8)&255);
             var a = nt*(v1&255) + t*(v2&255);
-            return (clampColor(r)<<24 | clampColor(g)<<16 | clampColor(b)<<8 | clampColor(a)) >>> 0;
+            return ((clampColor(r)<<24) | (clampColor(g)<<16) | (clampColor(b)<<8) | clampColor(a));
         }
         // gradients are like strings
         return t < 0.5 ? v1 : v2;
     }
-    if (type == FLAG_TYPE_LENGTH_LIST) {
+    if (type === FLAG_TYPE_LENGTH_LIST) {
         // if either is empty ("none"), then use value zero
-        if (v1.length == 0) {
+        if (v1.length === 0) {
             v1 = [ 0 ];
         }
-        if (v2.length == 0) {
+        if (v2.length === 0) {
             v2 = [ 0 ];
         }
-        var reslen = v1.length;
+        var lreslen = v1.length;
         // different sizes will create from*to items to match browser behaviour
-        if (v1.length != v2.length) {
-            reslen = v1.length * v2.length;
+        if (v1.length !== v2.length) {
+            lreslen = v1.length * v2.length;
         }
-        var res = [];
-        for (var i = 0; i < reslen; ++i) {
-            var fromVal = v1[i % v1.length];
-            var toVal = v2[i % v2.length];
-            var r = (toVal - fromVal) * t + fromVal;
-            if (r < 0) { r = 0; }
-            res.push(r);
+        var lres = [];
+        for (var li = 0; li < lreslen; ++li) {
+            var fromVal = v1[li % v1.length];
+            var toVal = v2[li % v2.length];
+            var rv = (toVal - fromVal) * t + fromVal;
+            if (rv < 0) { rv = 0; }
+            lres.push(rv);
         }
-        return res;
+        return lres;
     }
-    if (type == FLAG_TYPE_PATH) {
-        if (v1.length != v2.length) {
+    if (type === FLAG_TYPE_PATH) {
+        if (v1.length !== v2.length) {
             return t < 0.5 ? v1 : v2;
         }
-        var reslen = v1.length;
-        var res = [];
-        for (var i = 0; i < reslen; i += 2) {
-            if (v1[i] !== v2[i]) { // commands must match
+        var preslen = v1.length;
+        var pres = [];
+        for (var pi = 0; pi < preslen; pi += 2) {
+            if (v1[pi] !== v2[pi]) { // commands must match
                 return t < 0.5 ? v1 : v2;
             }
-            res[i] = v1[i];
+            pres[pi] = v1[pi];
             // coordinate data
-            res[i+1] = [];
-            for (var j = 0; j < v1[i+1].length; ++j) {
-                var newval = (v2[i+1][j]-v1[i+1][j]) * t + v1[i+1][j];
-                res[i+1].push(newval);
+            pres[pi+1] = [];
+            for (var j = 0; j < v1[pi+1].length; ++j) {
+                var newval = (v2[pi+1][j]-v1[pi+1][j]) * t + v1[pi+1][j];
+                pres[pi+1].push(newval);
             }
         }
-        return res;
+        return pres;
     }
-    if (type == FLAG_TYPE_FILTER) {
-        var reslen = v1.length;
-        if (reslen != v2.length) {
+    if (type === FLAG_TYPE_FILTER) {
+        var freslen = v1.length;
+        if (freslen !== v2.length) {
             // TODO: extra filters should be appended to the shorter list
             return t < 0.5 ? v1 : v2;
         }
-        var res = [];
-        var i = 0;
-        while (i < reslen) {
-            if (v1[i] != v2[i] || v1[i] == FILTER_URL) {
+        var fres = [];
+        var fi = 0;
+        while (fi < freslen) {
+            if (v1[fi] !== v2[fi] || v1[fi] === FILTER_URL) {
                 return t < 0.5 ? v1 : v2;
             }
-            res[i] = v1[i];
-            res[i+1] = (v2[i+1]-v1[i+1]) * t + v1[i+1];
-            if (v1[i] == FILTER_DROPSHADOW) { // multiple values and color for drop-shadow
-                res[i+2] = (v2[i+2]-v1[i+2]) * t + v1[i+2];
-                res[i+3] = (v2[i+3]-v1[i+3]) * t + v1[i+3];
+            fres[fi] = v1[fi];
+            fres[fi+1] = (v2[fi+1]-v1[fi+1]) * t + v1[fi+1];
+            if (v1[fi] === FILTER_DROPSHADOW) { // multiple values and color for drop-shadow
+                fres[fi+2] = (v2[fi+2]-v1[fi+2]) * t + v1[fi+2];
+                fres[fi+3] = (v2[fi+3]-v1[fi+3]) * t + v1[fi+3];
                 // interpolate rgba colors
-                var nt = 1-t;
-                var c1 = v1[i+4];
-                var c2 = v2[i+4];
-                var r = nt*(c1>>>24) + t*(c2>>>24); // triple >>> to get unsigned shift
-                var g = nt*((c1>>16)&255) + t*((c2>>16)&255);
-                var b = nt*((c1>>8)&255) + t*((c2>>8)&255);
-                var a = nt*(c1&255) + t*(c2&255);
-                res[i+4] = (clampColor(g)<<16 | clampColor(b)<<8 |
-                            clampColor(a)) + (clampColor(r)|0)*16777216;
-                i += 3;
+                var fnt = 1-t;
+                var c1 = v1[fi+4];
+                var c2 = v2[fi+4];
+                var fr = fnt*(c1>>>24) + t*(c2>>>24); // triple >>> to get unsigned shift
+                var fg = fnt*((c1>>16)&255) + t*((c2>>16)&255);
+                var fb = fnt*((c1>>8)&255) + t*((c2>>8)&255);
+                var fa = fnt*(c1&255) + t*(c2&255);
+                fres[fi+4] = ((clampColor(fg)<<16) | (clampColor(fb)<<8) |
+                            clampColor(fa)) + (clampColor(fr)|0)*16777216;
+                fi += 3;
             }
-            i += 2;
+            fi += 2;
         }
-        return res;
+        return fres;
     }
     return 0;
 }
@@ -497,16 +497,16 @@ function animateProperty(simpleTime, pdata)
     if (pdata[INX_EASING] && pdata[INX_EASING].length > ti-1) {
         var v = pdata[INX_EASING][ti-1];
         // TIMING_FN_LINEAR doesn't need processing, t = t
-        if (v[0] == TIMING_FN_CUBIC) {
+        if (v[0] === TIMING_FN_CUBIC) {
             t = cubicBezierY(v, t);
 
-        } else if (v[0] == TIMING_FN_STEP_START) {
-            var steps = v[1];
-            t = Math.ceil(t*steps)/steps;
+        } else if (v[0] === TIMING_FN_STEP_START) {
+            var stepsStart = v[1];
+            t = Math.ceil(t*stepsStart)/stepsStart;
 
-        } else if (v[0] == TIMING_FN_STEP_END) {
-            var steps = v[1];
-            t = Math.floor(t*steps)/steps;
+        } else if (v[0] === TIMING_FN_STEP_END) {
+            var stepsEnd = v[1];
+            t = Math.floor(t*stepsEnd)/stepsEnd;
         }
     }
     var v1 = pdata[INX_VALUES][ti-1];
@@ -559,7 +559,7 @@ function updateAllAnimations(mainUpdate)
         while (pendingCallbacks.length > 0) {
             var item = pendingCallbacks.shift();
             var tl = item[0];
-            if (item[1] == PENDING_ONFINISH) {
+            if (item[1] === PENDING_ONFINISH) {
                 if (tl['onfinish']) {
                     // calling as a method sets the timeline object as 'this'
                     tl['onfinish']();
@@ -569,7 +569,7 @@ function updateAllAnimations(mainUpdate)
                 }
                 tl._performAutoRemove();
 
-            } else if (item[1] == PENDING_ONLOOP) {
+            } else if (item[1] === PENDING_ONLOOP) {
                 if (tl['onloop']) {
                     // calling as a method sets the timeline object as 'this'
                     tl['onloop']();
@@ -613,7 +613,7 @@ function parseFloatList(str, separator)
 function parseCommaSeparated(str)
 {
     // IE uses space as separator in transform attribute, so convert them to comma before parsing
-    if (str.indexOf(',') == -1) {
+    if (str.indexOf(',') === -1) {
         str = str.replace(' ', ',');
     }
     return parseFloatList(str, ',');
@@ -718,15 +718,15 @@ function composeAndSetTransformAttr(elem)
     }
     for (var prop = P_POSITIONX; prop < trans.length; ++prop) {
         var val = trans[prop];
-        var defaultVal = (prop == P_SCALEX || prop == P_SCALEY) ? 1 : 0;
-        if (val != defaultVal) {
+        var defaultVal = (prop === P_SCALEX || prop === P_SCALEY) ? 1 : 0;
+        if (val !== defaultVal) {
             transform += " "+transformNames[prop]+"(";
             if (prop <= P_POSITIONY) { // position x and y
-                transform += (prop == P_POSITIONX) ? val+",0" : "0,"+val;
+                transform += (prop === P_POSITIONX) ? val+",0" : "0,"+val;
             } else if (prop >= P_ANCHORX) { // anchor x and y
-                transform += (prop == P_ANCHORX) ? val+",0" : "0,"+val;
+                transform += (prop === P_ANCHORX) ? val+",0" : "0,"+val;
             } else if (prop >= P_SCALEX) { // scale x and y
-                transform += (prop == P_SCALEX) ? val+",1" : "1,"+val;
+                transform += (prop === P_SCALEX) ? val+",1" : "1,"+val;
             } else {
                 transform += val; // skew x/y or rotate
             }
@@ -820,7 +820,7 @@ KsAnimation.prototype = {
 
             // check if zero time is reached
             } else if (this._playRate < 0 && curTime !== null && curTime <= this._rangeIn) {
-                if (this._loopCount && this._rangeOut != Infinity) { // loop jumping to range out
+                if (this._loopCount && this._rangeOut !== Infinity) { // loop jumping to range out
                     this._startTimeVal = sysTimelineTime - (this._rangeOut / this._playRate);
                     this._loopCount--; // this doesn't decrement Infinity
                     pendingCallback = PENDING_ONLOOP;
@@ -843,7 +843,7 @@ KsAnimation.prototype = {
                 }
 
             // from "finished" state back to "running"
-            } else if (curTime !== null && this._playRate != 0) {
+            } else if (curTime !== null && this._playRate !== 0) {
                 if (didSeek && this._holdTime !== null) {
                     // start time and hold time have values, which means we are in finished state,
                     // this happens if animation is finished and playback rate is reversed or
@@ -865,7 +865,7 @@ KsAnimation.prototype = {
                 // set start time during the first animation tick so that no frames are skipped
                 // in the beginning
                 if (this._startTimeVal === null) {
-                    if (this._playRate != 0 && this._holdTime !== null) {
+                    if (this._playRate !== 0 && this._holdTime !== null) {
                         this._startTimeVal = sysTimelineTime - this._holdTime / this._playRate;
                         this._holdTime = null;
                     } else {
@@ -879,7 +879,7 @@ KsAnimation.prototype = {
             if (this._holdTime === null && this._startTimeVal !== null) {
                 // the callbacks will be called later so they can call remove() successfully
                 var pendingcb = this._updateFinishedState(false);
-                if (pendingcb != PENDING_NONE) {
+                if (pendingcb !== PENDING_NONE) {
                     pendingCallbacks.push([ this, pendingcb ]);
                 }
             }
@@ -909,7 +909,7 @@ KsAnimation.prototype = {
                 var tlen = pdata[INX_TIMES].length;
                 var dur = pdata[INX_TIMES][tlen-1] - starttime;
 
-                if (dur == 0) { // zero duration
+                if (dur === 0) { // zero duration
                     val = pdata[INX_VALUES][tlen-1];
 
                 } else if (curTime < starttime) { // before begin time
@@ -922,7 +922,7 @@ KsAnimation.prototype = {
                 // after iteration has ended
                 } else if (curTime >= starttime + pdata[INX_ITERATIONDUR]) {
                     if (!pdata[INX_FILL] || pdata[INX_FILL][0] & FILL_FORWARDS) {
-                        if ((pdata[INX_ITERATIONDUR] % dur) == 0) {
+                        if ((pdata[INX_ITERATIONDUR] % dur) === 0) {
                             // use optimized path, if the end time is a multiple of last keyframe time,
                             // this means that iteration stopped exactly at last keyframe
                             val = pdata[INX_VALUES][tlen-1];
@@ -941,7 +941,7 @@ KsAnimation.prototype = {
                     val = animateProperty(simpleTime, pdata);
                 }
 
-                if (prop == P_MOTION_DISTANCE) {
+                if (prop === P_MOTION_DISTANCE) {
                     // store motion path values
                     target._ks['mpath'] = pdata[INX_MPATH];
                     target._ks.transform[prop] = val;
@@ -972,12 +972,12 @@ KsAnimation.prototype = {
             }
         }
         // return flag indicating if this animation wants to keep ticking
-        return this._getState() == STATE_RUNNING;
+        return this._getState() === STATE_RUNNING;
     },
 
     _performAutoRemove: function()
     {
-        if (this._options['autoremove'] !== false && this._getState() == STATE_FINISHED) {
+        if (this._options['autoremove'] !== false && this._getState() === STATE_FINISHED) {
             remove(this);
         }
     },
@@ -992,7 +992,6 @@ KsAnimation.prototype = {
         var adata = this._data;
         for (var e = 0; e < atargets.length; ++e) {
             var target = atargets[e];
-            var compVals = false;
             for (var p = 0; p < adata[e].length; ++p) {
                 var pdata = adata[e][p];
                 var prop = pdata[INX_PROP];
@@ -1006,7 +1005,7 @@ KsAnimation.prototype = {
 
     _parseTime(value)
     {
-        if (typeof value == 'number') {
+        if (typeof value === 'number') {
             return [ value, 0 ];
         }
         if (!isSet(this._options['markers']) || !isSet(this._options['markers'][value])) {
@@ -1039,11 +1038,11 @@ KsAnimation.prototype = {
         if (this._playRate > 0 && (t === null || t >= this._rangeOut || t < this._rangeIn)) {
             this._holdTime = this._rangeIn;
         } else if (this._playRate < 0 && (t === null || t <= this._rangeIn || t > this._rangeOut)) {
-            if (this._rangeOut == Infinity) {
+            if (this._rangeOut === Infinity) {
                 throw ERR("Cannot seek to Infinity");
             }
             this._holdTime = this._rangeOut;
-        } else if (this._playRate == 0 && t === null) {
+        } else if (this._playRate === 0 && t === null) {
             this._holdTime = this._rangeIn;
         }
         // break out if the timeline is already playing
@@ -1068,14 +1067,14 @@ KsAnimation.prototype = {
             millisecs = this._parseTime(millisecs)[0];
             checkIsFinite(millisecs);
         }
-        if (this._getState() != STATE_PAUSED) {
+        if (this._getState() !== STATE_PAUSED) {
             updateSysTimelineTime();
             var curTime = this._getCurrentTime();
             if (curTime === null) {
                 if (this._playRate >= 0) {
                     this._holdTime = this._rangeIn;
                 } else {
-                    if (this._rangeOut == Infinity) {
+                    if (this._rangeOut === Infinity) {
                         throw ERR("Cannot seek to Infinity");
                     }
                     this._holdTime = this._rangeOut;
@@ -1098,7 +1097,7 @@ KsAnimation.prototype = {
 
     'range': function(inTime, outTime)
     {
-        if (arguments.length == 0) {
+        if (arguments.length === 0) {
             return { "in": this._rangeIn, "out": this._rangeOut };
         }
         var pintd = this._parseTime(inTime);
@@ -1115,7 +1114,7 @@ KsAnimation.prototype = {
         this._rangeIn = pin;
         this._rangeOut = pout;
         // update state to play if it was finished and range changed it to running
-        if (oldState == STATE_FINISHED && this._getState() == STATE_RUNNING) {
+        if (oldState === STATE_FINISHED && this._getState() === STATE_RUNNING) {
             this['play']();
         }
         return this;
@@ -1154,7 +1153,7 @@ KsAnimation.prototype = {
         }
 
         this._saveBaseTransform();
-        if (this._holdTime !== null || this._startTimeVal === null || this._playRate == 0) {
+        if (this._holdTime !== null || this._startTimeVal === null || this._playRate === 0) {
             this._holdTime = seekTime;
             updateAllAnimations(false);
         }  else {
@@ -1259,7 +1258,7 @@ KsAnimation.prototype = {
     },
 
     '_cancel': function() {
-        if (!this._addedToList || this._getState() == STATE_IDLE) {
+        if (!this._addedToList || this._getState() === STATE_IDLE) {
             return this;
         }
         this._holdTime = null;
@@ -1306,7 +1305,7 @@ function parseTimingFn(val)
 
     } else if (startsWith(val, "steps(")) {
         var svals = val.substring(6, val.length-1).split(',');
-        return [ svals[1] && svals[1].trim() == "start" ? TIMING_FN_STEP_START : TIMING_FN_STEP_END,
+        return [ svals[1] && svals[1].trim() === "start" ? TIMING_FN_STEP_START : TIMING_FN_STEP_END,
                  parseFloat(svals[0]) ];
     }
     // other are linear
@@ -1330,7 +1329,7 @@ function parseColor(cstr)
 
 function parseFilter(filter)
 {
-    if (filter == "none") {
+    if (filter === "none") {
         return [ FILTER_NONE ];
     }
     var res = [];
@@ -1342,13 +1341,13 @@ function parseFilter(filter)
             var endinx = filter.indexOf(') ');
             if (endinx < 0) endinx = filter.length-1;
             var params = filter.substring(fninx+1, endinx).split(' ');
-            if (inx == FILTER_DROPSHADOW) { // 3 numbers and a color
+            if (inx === FILTER_DROPSHADOW) { // 3 numbers and a color
                 res.push(parseFloat(params[0]));
                 res.push(parseFloat(params[1]));
                 res.push(parseFloat(params[2]));
                 res.push(parseColor(params[3]));
 
-            } else if (inx == FILTER_URL) { // string parameter
+            } else if (inx === FILTER_URL) { // string parameter
                 res.push(params[0]);
 
             } else { // numeric parameter
@@ -1378,7 +1377,7 @@ function parseValues(prop, values)
 {
     var type = propertyType(propertyFlags(prop));
     for (var i = 0; i < values.length; ++i) {
-        if (type == FLAG_TYPE_PATH) {
+        if (type === FLAG_TYPE_PATH) {
             // split values for fast interpolation
             var val = values[i].substring(6, values[i].length-2); // remove "path('')"
             var commands = val.match(/[A-DF-Za-df-z][-+0-9eE., ]*/ig);
@@ -1394,22 +1393,22 @@ function parseValues(prop, values)
             }
             values[i] = s;
 
-        } else if (type == FLAG_TYPE_COLOR) {
+        } else if (type === FLAG_TYPE_COLOR) {
             if (startsWith(values[i], "#")) {
-                var hasAlpha = (values[i].length == 9);
+                var hasAlpha = (values[i].length === 9);
                 values[i] = parseInt(values[i].substring(1), 16);
                 if (!hasAlpha) { // add alpha to colors without it
                     values[i] = (values[i]*256) | 255;
                 }
-            } else if (!startsWith(values[i], "url(") && values[i] != "none") {
+            } else if (!startsWith(values[i], "url(") && values[i] !== "none") {
                 console.warn("unsupported color: "+values[i]);
                 values[i] = 0;
             }
-        } else if (type == FLAG_TYPE_FILTER) {
+        } else if (type === FLAG_TYPE_FILTER) {
             values[i] = parseFilter(values[i]);
 
-        } else if (type == FLAG_TYPE_LENGTH_LIST) {
-            if (values[i] != "none") {
+        } else if (type === FLAG_TYPE_LENGTH_LIST) {
+            if (values[i] !== "none") {
                 if (!/^[0-9 .]*$/.test(values[i])) { // units are not allowed
                     console.warn("unsupported value: "+values[i]);
                     values[i] = [ 0 ];
@@ -1420,7 +1419,7 @@ function parseValues(prop, values)
                 values[i] = [ 0 ];
             }
 
-        } else if (type == FLAG_TYPE_LENGTH) {
+        } else if (type === FLAG_TYPE_LENGTH) {
             checkIsFinite(values[i]);
             values[i] = parseFloat(values[i]);
 
@@ -1484,7 +1483,7 @@ function initTimeline(tl, tlData)
             }
 
             var values = getShortOrLong(kf, "v", "values");
-            if (!values || values.length != times.length) {
+            if (!values || values.length !== times.length) {
                 throw ERR("Values do not match times");
             }
             values = copyArray(values);
@@ -1531,7 +1530,7 @@ function initTimeline(tl, tlData)
 function animate()
 {
     var options = {};
-    if (arguments.length % 2 == 1) { // odd count of arguments means that options are given
+    if (arguments.length % 2 === 1) { // odd count of arguments means that options are given
         options = copyMap(arguments[arguments.length-1]);
     }
 
