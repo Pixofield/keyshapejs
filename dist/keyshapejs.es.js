@@ -1,7 +1,4 @@
 /** @license KeyshapeJS v1.2.0 (c) 2018-2021 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
-window['KeyshapeJS'] = (function () {
-
-/* module-start */
 
 function ERR(msg) { return Error(msg); }
 var NOT_IN_LIST_EXCEPTION = ERR("Not in timeline list");
@@ -1602,18 +1599,6 @@ function globalState()
     return holdTimelineTime ? STATE_PAUSED : STATE_RUNNING;
 }
 
-/* module-end */
+const version = '1.2.0';
 
-return {
-    'version': '1.2.0',
-    'animate': animate,
-    'add': add,
-    'remove': remove,
-    'removeAll': removeAll,
-    'timelines': timelines,
-    'globalPlay': globalPlay,
-    'globalPause': globalPause,
-    'globalState': globalState
-};
-})();
-
+export { version, animate, add, remove, removeAll, timelines, globalPlay, globalPause, globalState };
