@@ -615,7 +615,7 @@ To create the JS module file, run: (requires Node.js and npm)
 
     npm install
     npm install --global gulp-cli
-    gulp
+    gulp --gulpfile gulfile.cjs
 
 The minified version has been created with the Google Closure minifier using the following command:
 
