@@ -19,6 +19,15 @@ The timeline can be controlled like this:
     KeyshapeJS.globalPause();               // global pause
     KeyshapeJS.timelines()[0].time(1000);   // set the current time to 1000 millisecs
 
+## Using the npm package
+
+The [npm package](https://www.npmjs.com/package/keyshapejs) makes it possible to import
+the KeyshapeJS library. It's useful when animating SVG inlined into HTML.
+It can't be used if the SVG is loaded using the `<object>` tag.
+
+    import * as KeyshapeJS from 'keyshapejs';
+    var timeline = KeyshapeJS.animate(...);
+
 ## Times and values
 
 Animations must have at least two times, the start time and the end time. Times cannot be negative and
