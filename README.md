@@ -617,6 +617,7 @@ To create the JS module file and the minified file under the dist folder, run: (
     npm run build
 
 The minified version is created using the [Google Closure compiler](https://developers.google.com/closure/compiler).
+Some platforms may require installing the Java runtime to run it.
 
 ## Versioning
 
