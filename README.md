@@ -611,14 +611,12 @@ Safari may also drop the animation frame rate from 60 to 30 in power saving mode
 
 ## Building
 
-To create the JS module file, run: (requires Node.js and npm)
+To create the JS module file and the minified file under the dist folder, run: (requires Node.js and npm)
 
     npm install
     npm run build
 
-The minified version has been created with the Google Closure minifier using the following command:
-
-    java -jar compiler-latest/closure-compiler-v20170806.jar --compilation_level ADVANCED_OPTIMIZATIONS --js keyshapejs.js --js_output_file keyshapejs.min.js --externs extern-keyshapejs.js
+The minified version is created using the [Google Closure compiler](https://developers.google.com/closure/compiler).
 
 ## Versioning
 
