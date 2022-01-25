@@ -104,7 +104,7 @@ if (!reqAnimationFrame) { // IE9 needs setTimeout()
     };
 }
 
-var isWebkit = navigator.vendor.match(/apple/i);
+var isWebkit = /apple/i.test(navigator.vendor);
 
 function isSet(value)
 {
