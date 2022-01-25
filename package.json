@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "node build.js && google-closure-compiler --js=keyshapejs.js --js_output_file=dist/keyshapejs.min.js --compilation_level ADVANCED_OPTIMIZATIONS --externs externs-for-minifier.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "node test.js"
     },
     "repository": {
         "type": "git",
