@@ -5,7 +5,7 @@
     "main": "dist/keyshapejs.es.js",
     "type": "module",
     "scripts": {
-        "build": "node build.js && google-closure-compiler --js=keyshapejs.js --js_output_file=dist/keyshapejs.min.js --compilation_level ADVANCED_OPTIMIZATIONS --externs externs-for-minifier.js",
+        "build": "node build.js && google-closure-compiler --js=keyshapejs.js --js_output_file=dist/keyshapejs.min.js --compilation_level ADVANCED_OPTIMIZATIONS --language_out ECMASCRIPT3 --externs externs-for-minifier.js",
         "test": "node test.js"
     },
     "repository": {
