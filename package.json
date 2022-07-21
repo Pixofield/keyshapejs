@@ -1,6 +1,6 @@
 {
     "name": "keyshapejs",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "KeyshapeJS animation library",
     "main": "dist/keyshapejs.es.js",
     "type": "module",

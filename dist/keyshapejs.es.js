@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.2.0 (c) 2018-2021 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.2.1 (c) 2018-2022 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 
 function ERR(msg) { return Error(msg); }
 var NOT_IN_LIST_EXCEPTION = ERR("Not in timeline list");
@@ -1599,6 +1599,6 @@ function globalState()
     return holdTimelineTime ? STATE_PAUSED : STATE_RUNNING;
 }
 
-const version = '1.2.0';
+const version = '1.2.1';
 
 export { version, animate, add, remove, removeAll, timelines, globalPlay, globalPause, globalState };

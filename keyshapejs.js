@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.2.0 (c) 2018-2021 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.2.1 (c) 2018-2022 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 window['KeyshapeJS'] = (function () {
 
 /* module-start */
@@ -1605,7 +1605,7 @@ function globalState()
 /* module-end */
 
 return {
-    'version': '1.2.0',
+    'version': '1.2.1',
     'animate': animate,
     'add': add,
     'remove': remove,
