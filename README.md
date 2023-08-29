@@ -45,31 +45,33 @@ Property names with a dash, such as stroke-width, are not supported.
 
 The following table lists supported properties and values they accept.
 
-| Property          | Accepted Values     |
-| ----------------- | ------------------- |
-| mpath             |  percentage (distance along a path)   |
-| posX              |  number (gets converted to px)   |
-| posY              |  number (gets converted to px)   |
-| rotate            |  number (gets converted to px)   |
-| scaleX            |  number (gets converted to px)   |
-| scaleY            |  number (gets converted to px)   |
-| skewX             |  number (gets converted to px)   |
-| skewY             |  number (gets converted to px)   |
-| anchorX           |  number (gets converted to px)   |
-| anchorY           |  number (gets converted to px)   |
-| opacity           |  number             |
-| visibility        |  string: 'visible', 'hidden'     |
-| fillOpacity       |  number             |
-| strokeOpacity     |  number             |
-| fill              |  color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'   |
-| stroke            |  color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'   |
-| strokeDasharray   |  number list: '10 20'   |
-| strokeDashoffset  |  number (gets converted to px)   |
-| strokeWidth       |  number (gets converted to px)   |
-| width             |  number (gets converted to px)   |
-| height            |  number (gets converted to px)   |
-| filter            |  filter value: 'blur(0px) drop-shadow(0px 0px 0px rgba(0,0,0,0))'   |
-| d                 |  path data: 'path('M0,0L10,-30C15,-30,60,-25,60,-25L60,5Z')'   |
+| Property         | Accepted Values                                                  |
+| ---------------- | ---------------------------------------------------------------- |
+| mpath            | percentage (distance along a path)                               |
+| posX             | number (gets converted to px)                                    |
+| posY             | number (gets converted to px)                                    |
+| rotate           | number (gets converted to px)                                    |
+| scaleX           | number (gets converted to px)                                    |
+| scaleY           | number (gets converted to px)                                    |
+| skewX            | number (gets converted to px)                                    |
+| skewY            | number (gets converted to px)                                    |
+| anchorX          | number (gets converted to px)                                    |
+| anchorY          | number (gets converted to px)                                    |
+| opacity          | number                                                           |
+| visibility       | string: 'visible', 'hidden'                                      |
+| fillOpacity      | number                                                           |
+| strokeOpacity    | number                                                           |
+| fill             | color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'             |
+| stroke           | color: '#80ff40', '#80ff40ff', 'url("#ref")', 'none'             |
+| strokeDasharray  | number list: '10 20'                                             |
+| strokeDashoffset | number (gets converted to px)                                    |
+| strokeWidth      | number (gets converted to px)                                    |
+| width            | number (gets converted to px)                                    |
+| height           | number (gets converted to px)                                    |
+| rx               | number (gets converted to px)                                    |
+| ry               | number (gets converted to px)                                    |
+| filter           | filter value: 'blur(0px) drop-shadow(0px 0px 0px rgba(0,0,0,0))' |
+| d                | path data: 'path('M0,0L10,-30C15,-30,60,-25,60,-25L60,5Z')'      |
 
 Only px length units can be used.
 

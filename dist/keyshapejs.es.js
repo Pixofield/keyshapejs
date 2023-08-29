@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.2.1 (c) 2018-2022 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.3.0 (c) 2018-2023 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 
 function ERR(msg) { return Error(msg); }
 var NOT_IN_LIST_EXCEPTION = ERR("Not in timeline list");
@@ -159,6 +159,8 @@ var propertyData = {
     "height": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
     "opacity": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_NUMBER,
     "offsetDistance": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
+    "rx": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
+    "ry": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
     "stroke": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_COLOR,
     "strokeDasharray": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_LENGTH_LIST,
     "strokeDashoffset": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_LENGTH,
@@ -1599,6 +1601,6 @@ function globalState()
     return holdTimelineTime ? STATE_PAUSED : STATE_RUNNING;
 }
 
-const version = '1.2.1';
+const version = '1.3.0';
 
 export { version, animate, add, remove, removeAll, timelines, globalPlay, globalPause, globalState };

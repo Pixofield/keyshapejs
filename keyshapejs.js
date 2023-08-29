@@ -1,4 +1,4 @@
-/** @license KeyshapeJS v1.2.1 (c) 2018-2022 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
+/** @license KeyshapeJS v1.3.0 (c) 2018-2023 Pixofield Ltd | pixofield.com/keyshapejs/mit-license */
 window['KeyshapeJS'] = (function () {
 
 /* module-start */
@@ -162,6 +162,8 @@ var propertyData = {
     "height": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
     "opacity": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_NUMBER,
     "offsetDistance": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
+    "rx": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
+    "ry": FLAG_TARGET_ATTRIBUTE | FLAG_TYPE_LENGTH,
     "stroke": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_COLOR,
     "strokeDasharray": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_LENGTH_LIST,
     "strokeDashoffset": FLAG_TARGET_CSS_PROPERTY | FLAG_TYPE_LENGTH,
@@ -1605,7 +1607,7 @@ function globalState()
 /* module-end */
 
 return {
-    'version': '1.2.1',
+    'version': '1.3.0',
     'animate': animate,
     'add': add,
     'remove': remove,
